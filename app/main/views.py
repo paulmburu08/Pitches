@@ -1,12 +1,13 @@
-from flask import render_template,abort,redirect,url_for
+from flask import render_template,abort,request,redirect,url_for
 from . import main
-from flask_login import login_required
-from .forms import AddComment,UpdateProfile
-from ..models import User
-from .. import db
+from flask_login import login_required,current_user
+from .forms import AddComment,UpdateProfile,PitchesForm
+from ..models import User,Pitches
+from .. import db,photos
 
-@main.route('/')
-def index():
+@main.route('/pitch/<int:id>')
+@login_required
+def index(id):
     '''
     View root page function that returns the index page and its data
     '''
@@ -14,6 +15,21 @@ def index():
     title = 'PITCHES'
 
     return render_template('index.html', title = title)
+
+@main.route('/pitch/<int:id>')
+@login_required
+def pitch(id):
+
+    form = PitchesForm()
+    user_id = User.query.filter_by(id = id).all()
+    if form.validate_on_submit():
+        title = form.title.data
+        pitch = form.pitch.data
+
+        new_pitch = Pitches(pitch_title = title, pitch_pitch = pitch, user = current_user)
+
+        new_pitch.save_pitch()
+        return redirect(url_for(''))
 
 @main.route('/user/<uname>')
 def profile(uname):
@@ -42,3 +58,14 @@ def update_profile(uname):
         return redirect(url_for('.profile',uname=user.username))
 
     return render_template('profile/update.html',form =form)
+
+@main.route('/user/<uname>/update/pic',methods= ['POST'])
+@login_required
+def update_pic(uname):
+    user = User.query.filter_by(username = uname).first()
+    if 'photo' in request.files:
+        filename = photos.save(request.files['photo'])
+        path = f'photos/{filename}'
+        user.profile_pic_path = path
+        db.session.commit()
+    return redirect(url_for('main.profile',uname=uname))

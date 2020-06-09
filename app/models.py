@@ -1,5 +1,6 @@
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import UserMixin
+from datetime import datetime
 from . import login_manager
 from . import db
 
@@ -16,6 +17,9 @@ class User(UserMixin,db.Model):
     bio = db.Column(db.String(255))
     profile_pic_path = db.Column(db.String())
     pass_secure = db.Column(db.String(255))
+    pitches = db.relationship('Pitches',backref = 'user',lazy = "dynamic")
+    comments = db.relationship('Comments',backref = 'user',lazy = "dynamic")
+
     @property
     def password(self):
         raise AttributeError('You cannot read the password attribute')
@@ -40,3 +44,36 @@ class Role(db.Model):
 
     def __repr__(self):
         return f'User {self.name}'
+
+class Pitches(db.Model):
+    __tablename__ = 'pitches'
+
+    id = db.Column(db.Integer,primary_key = True)
+    title = db.Column(db.String(255))
+    pitch = db.Column(db.String(2000))
+    date = db.Column(db.DateTime,default = datetime.utcnow)
+    user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
+    comments = db.relationship('Comments',backref = 'pitch',lazy = "dynamic")
+
+    def save_pitch(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def __repr__(self):
+        return f'User {self.title}'
+
+class Comments(db.Model):
+    __tablename__ = 'comments'
+
+    id = db.Column(db.Integer,primary_key = True)
+    comment = db.Column(db.String(2000))
+    date = db.Column(db.DateTime,default = datetime.utcnow)
+    user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
+    pitch_id = db.Column(db.Integer,db.ForeignKey("pitches.id"))
+
+    def save_comment(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def __repr__(self):
+        return f'User {self.comment}'
