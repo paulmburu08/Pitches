@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/">PITCHES</a>
+    <a class="navbar-brand" href="/"><b>PITCHES</b></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -8,18 +8,20 @@
         <li class="nav-item active">
           <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Pickup lines</a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Categories
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/pitch/<int:id>/comments">Pickup lines</a>
+            <a class="dropdown-item" href="#">Interview pitch</a>
+            <a class="dropdown-item" href="#">Product pitch</a>
+            <a class="dropdown-item" href="#">Promotion pitch</a>
+          </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Interview pitch</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Product pitch</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Promotion pitch</a>
-        </li>
+          <a class="nav-link" href="/pitch">New pitch</a>
+      </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         {% if current_user.is_authenticated %}

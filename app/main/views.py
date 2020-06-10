@@ -2,34 +2,53 @@ from flask import render_template,abort,request,redirect,url_for
 from . import main
 from flask_login import login_required,current_user
 from .forms import AddComment,UpdateProfile,PitchesForm
-from ..models import User,Pitches
+from ..models import User,Pitches,Comments
 from .. import db,photos
 
-@main.route('/pitch/<int:id>')
+@main.route('/')
 @login_required
-def index(id):
+def index():
     '''
     View root page function that returns the index page and its data
     '''
+    pitches = Pitches.query.order_by(Pitches.date.desc())
 
     title = 'PITCHES'
 
-    return render_template('index.html', title = title)
+    return render_template('index.html', title = title, pitches = pitches)
 
-@main.route('/pitch/<int:id>')
+@main.route('/pitch',methods = ['GET','POST'])
 @login_required
-def pitch(id):
+def new_pitch():
 
     form = PitchesForm()
-    user_id = User.query.filter_by(id = id).all()
     if form.validate_on_submit():
         title = form.title.data
         pitch = form.pitch.data
 
-        new_pitch = Pitches(pitch_title = title, pitch_pitch = pitch, user = current_user)
+        new_pitch = Pitches(title = title, pitch = pitch, user = current_user)
 
         new_pitch.save_pitch()
-        return redirect(url_for(''))
+        return redirect(url_for('main.index'))
+        
+    title = 'New Pitch'
+    return render_template('pitch_form.html', title= title,form = form)
+
+@main.route('/pitch/<int:id>/comments',methods = ['GET','POST'])
+def comments(id):
+    pitch = Pitches.query.filter_by(id = id).first()
+    form = AddComment()
+    if form.validate_on_submit():
+        comment = form.comment.data
+
+        new_comment = Comments(comment = comment,pitch_id = pitch.id, user = current_user)
+
+        new_comment.save_comment()
+        return redirect(url_for('main.comments',id = pitch.id))
+
+    comments = Comments.query.filter_by(pitch_id = id).order_by(Comments.date.desc())
+    title = 'Comments'
+    return render_template('comments.html', title= title,form = form, comments = comments)
 
 @main.route('/user/<uname>')
 def profile(uname):
