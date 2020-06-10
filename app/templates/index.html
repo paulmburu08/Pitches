@@ -3,13 +3,16 @@
 
 {% block content %}
 
-{% for pitch in pitches %}
-<div class="card" >
-   {{pitch.title}}
-   {{pitch.pitch}}
-   {{User.username}}
-   <a href="/pitch/{{pitch.id}}/comments">Comment</a>
+<div class="container-fluid">
+<div class="row">
+   {% for pitch in pitches %}
+   <div class="pitch col-md-6" >
+      <b>{{pitch.title}}.</b> <br><br>
+      <p>{{pitch.pitch}}</p>
+      <a href="/pitch/{{pitch.id}}/comments" class="btn btn-dark btn-sm">Comment</a>
+   </div>
+   {% endfor %}
 </div>
-{% endfor %}
+</div>
 
 {% endblock %}

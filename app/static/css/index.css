@@ -1,0 +1,25 @@
+body{
+    background-color: whitesmoke;
+}
+
+.pitch{
+    margin-bottom: 7px;
+}
+
+.comment{
+    width: 25%;
+    margin-left: 5px;
+}
+
+.comments{
+    margin-left: 5px;
+}
+
+.pitchForm{
+    width: 70%;
+}
+
+.navbar-brand{
+    font-family: 'Permanent Marker', cursive;
+    font-size: 25px;
+}

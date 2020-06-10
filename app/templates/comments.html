@@ -2,12 +2,14 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block content %}
-<div>
+<div class="container-fluid">
+    <div class="comment">
 
-    {{ wtf.quick_form(form) }}
+        {{ wtf.quick_form(form) }}
 
+    </div><br><br>
+    {% for comment in comments %}
+    <p class="comments">{{comment.comment}}</p>
+    {% endfor %}
 </div>
-{% for comment in comments %}
-   <li>{{comment.comment}}</li>
-{% endfor %}
 {% endblock %}
