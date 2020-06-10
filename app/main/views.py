@@ -25,14 +25,20 @@ def new_pitch():
     if form.validate_on_submit():
         title = form.title.data
         pitch = form.pitch.data
+        category = form.category.data
 
-        new_pitch = Pitches(title = title, pitch = pitch, user = current_user)
+        new_pitch = Pitches(title = title, pitch = pitch,category = category, user = current_user)
 
         new_pitch.save_pitch()
         return redirect(url_for('main.index'))
         
     title = 'New Pitch'
     return render_template('pitch_form.html', title= title,form = form)
+
+@main.route('/category/<string:cat>')
+def category(cat):
+    pitches = Pitches.query.filter_by(category = cat).order_by(Pitches.date.desc())
+    return render_template('category.html', pitches = pitches)
 
 @main.route('/pitch/<int:id>/comments',methods = ['GET','POST'])
 def comments(id):
