@@ -36,11 +36,13 @@ def new_pitch():
     return render_template('pitch_form.html', title= title,form = form)
 
 @main.route('/category/<string:cat>')
+@login_required
 def category(cat):
     pitches = Pitches.query.filter_by(category = cat).order_by(Pitches.date.desc())
     return render_template('category.html', pitches = pitches)
 
 @main.route('/pitch/<int:id>/comments',methods = ['GET','POST'])
+@login_required
 def comments(id):
     pitch = Pitches.query.filter_by(id = id).first()
     form = AddComment()

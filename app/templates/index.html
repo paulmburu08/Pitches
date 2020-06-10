@@ -4,8 +4,12 @@
 {% block content %}
 
 {% for pitch in pitches %}
-   <li>{{pitch.title}}</li>
+<div class="card" >
+   {{pitch.title}}
+   {{pitch.pitch}}
+   {{User.username}}
    <a href="/pitch/{{pitch.id}}/comments">Comment</a>
+</div>
 {% endfor %}
 
 {% endblock %}
