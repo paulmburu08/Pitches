@@ -5,7 +5,7 @@ An application where users get to submit their one minute pitches and view other
 {paulmburu08}https://github.com/paulmburu08
 
 # Live link
-
+https://dashboard.heroku.com/apps/paulpitches
 
 # Description
 As a User you will be able to:
